@@ -1,0 +1,18 @@
+{
+  "name": "xianrenqh/admin",
+  "type": "library",
+  "license": "MIT",
+  "description": "HuiAdmin Webman",
+  "require": {
+    "workerman/webman-framework": ">=1.4",
+    "webman/think-orm": "^1.0",
+    "webman/event": "^1.0",
+    "webman/captcha": "^1.0.0",
+    "guzzlehttp/guzzle": "^7.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Xianrenqh\\Admin\\": "src"
+    }
+  }
+}
