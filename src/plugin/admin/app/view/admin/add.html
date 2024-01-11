@@ -1,0 +1,145 @@
+<div class="main-container">
+    <form class="layui-form" action="" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">角色组</label>
+            <div class="layui-input-block">
+                <div name="roles" id="roles" value=""></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" required lay-verify="required" autocomplete="off"
+                       placeholder="请输入用户名" class="layui-input" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">昵称</label>
+            <div class="layui-input-block">
+                <input type="text" name="nickname" required lay-verify="required" autocomplete="off"
+                       placeholder="请输入昵称" class="layui-input" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" autocomplete="off" required lay-verify="required|pwd"
+                       placeholder="请输入密码" class="layui-input" value="">
+                <tip>由字母、数字、特殊字符，任意2种组成，6-15位</tip>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="email" name="email" autocomplete="off" lay-verify="email"
+                       placeholder="请输入邮箱" class="layui-input" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号</label>
+            <div class="layui-input-block">
+                <input type="text" name="mobile" autocomplete="off" lay-verify="phone"
+                       placeholder="请输入手机号" class="layui-input" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <input type="checkbox" id="status" lay-filter="status" lay-skin="switch"/>
+                <input type="text" style="display:none" name="status" value="1"/>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="layui-btn layui-btn-sm" lay-submit=""
+                        lay-filter="data-save">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    提交
+                </button>
+                <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    重置
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+  layui.use(["form", "iconPicker", "popup", "util", "xmSelect"], function () {
+    var $ = layui.$;
+    var form = layui.form;
+    form.render();
+
+    //自定义密码表单验证
+    form.verify({
+      pwd: function (value, elem) {
+        if (!/^[^\u4e00-\u9fa5]*$/.test(value)) {
+          return "密码不能出现中文";
+        }
+        if (!/^(?![a-zA-Z]+$)(?!\d+$)(?![^\da-zA-Z\s]+$).{6,15}$/.test(value)) {
+          return '由字母、数字、特殊字符，任意2种组成，6-15位';
+        }
+      }
+    });
+
+    // 字段 角色 roles
+    layui.$.ajax({
+      url: "/app/admin/role/select?format=tree",
+      dataType: "json",
+      success: function (res) {
+        if (!top.Admin.Account.isSupperAdmin) {
+          layui.each(res.data, function (k, v) {
+            v.disabled = true;
+          });
+        }
+        layui.xmSelect.render({
+          el: "#roles",
+          name: "roles",
+          initValue: [],
+          data: res.data,
+          layVerify: "required",
+          theme: {color: 'var(--global-primary-color)'},
+          tree: {show: true, expandedKeys: true, strict: false},
+          toolbar: {show: true, list: ["ALL", "CLEAR", "REVERSE"]},
+        })
+        if (res.code !== 200) {
+          layui.popup.failure(res.msg);
+        }
+      }
+    });
+
+    // 字段 状态 status
+    layui.use(["form"], function () {
+      layui.$("#status").attr("checked", layui.$('input[name="status"]').val() != 0);
+      layui.form.render();
+      layui.form.on("switch(status)", function (data) {
+        layui.$('input[name="status"]').val(this.checked ? 1 : 0);
+      });
+    })
+
+    //表单提交
+    layui.form.on("submit(data-save)", function (data) {
+      layui.$.ajax({
+        url: '/app/admin/admin/add',
+        type: "POST",
+        dateType: "json",
+        data: data.field,
+        success: function (res) {
+          if (res.code !== 200) {
+            return layui.popup.failure(res.msg);
+          }
+          return layui.popup.success("操作成功", function () {
+            //刷新数据表格
+            if (parent.hasOwnProperty('refreshTable')) {
+              refreshTable('adminTable', 1);
+              layer.closeAll('page');
+            }
+          });
+        }
+      });
+      return false;
+    });
+
+  })
+</script>

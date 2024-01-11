@@ -1,0 +1,157 @@
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-row top-search-from">
+            <form class="layui-form layui-col-md12 layui-form-admin">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <input type="text" name="username" placeholder="请输入用户名" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-inline">
+                        <input type="text" name="mobile" placeholder="请输入手机号" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-inline">
+                        <input type="text" name="email" placeholder="请输入邮箱" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-inline" style="width:130px;">
+                        <select name="status">
+                            <option value="">==是否启用==</option>
+                            <option value="1">已启用</option>
+                            <option value="0">已禁用</option>
+                        </select>
+                    </div>
+
+                    <div class="layui-inline">
+                        <button class="layui-btn layui-btn-md" data-type="reload" lay-submit=""
+                                lay-filter="table-search-admin">
+                            <i class="layui-icon layui-icon-search"></i>搜索
+                        </button>
+                        <button class="layui-btn layui-btn-danger layui-btn-md" type="reset"
+                                lay-submit="" lay-filter="table-reset-admin">
+                            <i class="layui-icon">&#xe63f;</i>清空
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div style="">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table class="layui-hide" id="adminTable" lay-filter="adminTable"></table>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="adminTableToolbar">
+    <button class="layui-btn layui-btn-sm" permission="app.admin.admin.add"
+            data-open="/app/admin/admin/add" data-title="添加管理员">
+        <i class="layui-icon layui-icon-add-1"></i>
+        新增
+    </button>
+</script>
+
+<script type="text/html" id="adminStatusTpl">
+    {{# if(d.show_toolbar){ }}
+    <input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="启用|禁用"
+           lay-filter="switchStatus" data-primary-key="id" data-field="status"
+           data-href="/app/admin/admin/edit" {{d.status== 1 ? 'checked' : '' }} />
+    {{# } }}
+</script>
+<script type="text/html" id="adminBarTool">
+    {{# if(d.show_toolbar){ }}
+    <button class="layui-btn layui-btn-xs" title="编辑" permission="app.admin.admin.edit"
+            data-open="/app/admin/admin/edit?id={{d.id}}"
+            data-title="编辑">编辑
+    </button>
+    <button class="layui-btn layui-btn-danger layui-btn-xs" title="删除" permission="app.admin.admin.delete"
+            data-confirm="/app/admin/admin/delete" data-data="id={{d.id}}"
+            data-title="您确定要删除吗？" data-reload="1" data-table-id="adminTable">
+        删除
+    </button>
+    {{# } }}
+</script>
+
+<script>
+  layui.use(['table', 'form', 'util'], function () {
+    var $ = layui.jquery;
+    var form = layui.form;
+    var table = layui.table;
+    var util = layui.util;
+    form.render();
+
+    var tableInit = table.render({
+      elem: '#adminTable'
+      , toolbar: '#adminTableToolbar'
+      , defaultToolbar: [{
+        layEvent: 'refresh',
+        icon: 'layui-icon-refresh',
+        title: '刷新'
+      }, 'filter', 'exports']
+      , method: 'get'
+      , url: "/app/admin/admin/select"
+      , parseData: function (res) {
+        return {
+          "code": 0,
+          "msg": res.msg,
+          "count": res.count,
+          "data": res.data
+        };
+      }
+      , cellMinWidth: 100
+      , cols: [[
+        {field: 'id', title: 'ID', width: 60, align: 'center'}
+        , {field: 'username', title: '用户名'}
+        , {field: 'nickname', title: '昵称', width: 110}
+        , {
+          title: "角色",
+          field: "roles",
+          templet: function (d) {
+            let field = "roles_arr";
+            if (typeof d[field] == "undefined") return "";
+            let items = [];
+            layui.each(d[field], function (k, v) {
+              items.push(v.name);
+            });
+            return util.escape(items.join(","));
+          }
+        }
+        , {field: 'login_time', title: '上次登录时间', width: 170}
+        , {field: 'login_ip', title: '上次登录IP', width: 170}
+        , {field: 'create_time', title: '添加时间', width: 170}
+        , {field: 'status', title: '状态', templet: '#adminStatusTpl', align: 'center', width: 100}
+        , {fixed: 'right', title: '操作', toolbar: '#adminBarTool', align: 'center', width: 130}
+      ]]
+      , page: true
+      , limit: 10
+    });
+
+    // 表头工具栏工具事件
+    table.on("toolbar(" + tableInit.config.id + ")", function (obj) {
+      if (obj.event === "refresh") {
+        refreshTable(tableInit.config.id, 1);
+      }
+    })
+
+    // 表格顶部搜索事件
+    form.on("submit(table-search-admin)", function (data) {
+      table.reload(tableInit.config.id, {
+        where: data.field
+      })
+      return false;
+    });
+    //表格顶部清空时间
+    form.on("submit(table-reset-admin)", function (data) {
+      $(".layui-form-admin")[0].reset();
+      form.render();
+      table.reload(tableInit.config.id, {
+        where: {}
+      })
+      return false;
+    })
+
+  });
+</script>

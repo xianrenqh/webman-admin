@@ -1,0 +1,204 @@
+*[permission] {
+    display: none;
+}
+
+/*更改layui部分默认颜色为主题颜色*/
+.layui-laypage .layui-laypage-curr .layui-laypage-em {
+    background-color: var(--global-primary-color);
+}
+
+.layui-form-select dl dd.layui-this {
+    color: var(--global-primary-color);
+}
+
+.layui-input:focus, .layui-textarea:focus {
+    border-color: var(--global-primary-color) !important;
+}
+
+.layui-tab-brief > .layui-tab-title .layui-this {
+    color: var(--global-primary-color);
+}
+
+.layui-tab-brief > .layui-tab-more li.layui-this:after, .layui-tab-brief > .layui-tab-title .layui-this:after {
+    border-bottom: 2px solid var(--global-primary-color);
+}
+
+.layui-form-radio:hover > *, .layui-form-radioed, .layui-form-radioed > i {
+    color: var(--global-primary-color);
+}
+
+.layui-elem-quote {
+    border-left: 5px solid var(--global-primary-color);
+}
+
+.layui-form-checked[lay-skin=primary] > i {
+    border-color: var(--global-primary-color) !important;
+    background-color: var(--global-primary-color);
+    color: #fff;
+}
+
+/*end*/
+
+.main-container {
+    padding: 10px;
+    margin: 0;
+    box-sizing: border-box;
+    background-color: transparent;
+    width: 100%;
+}
+
+.layui-form .layui-form-item .layui-input-inline {
+    margin-left: 10px !important;
+}
+
+.layui-form .layui-form-item .layui-form-label {
+    width: 110px !important;
+}
+
+.layui-form .layui-form-item > .layui-input-block {
+    margin-left: 150px !important;
+}
+
+.layui-form .layui-form-item .layui-input-inline {
+    margin-left: 10px !important;
+}
+
+.layui-form .layui-form-item tip {
+    display: inline-block;
+    margin-top: 10px;
+    line-height: 10px;
+    font-size: 13px;
+    color: var(--global-primary-color);
+    margin-left: 10px;
+}
+
+.mode_select > tip, .mode_radio > tip {
+    display: inline-block;
+    line-height: 35px;
+    font-size: 12px;
+    color: #ef5c73;
+}
+
+/**必填红点 */
+.layui-form .layui-form-item > .required:after {
+    content: '*';
+    color: red;
+    position: absolute;
+    margin-left: 4px;
+    font-weight: bold;
+    line-height: 1.8em;
+    top: 6px;
+    right: 5px;
+}
+
+.layui-form .bottom {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    line-height: 50px;
+    background-color: #F8F8F8;
+    border-top: 1px solid #eee;
+}
+
+.button-container {
+    position: absolute;
+    right: 15px;
+}
+
+.hui-userinfo-avatar-show .avatar {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto;
+    position: relative;
+    cursor: pointer;
+}
+
+.hui-userinfo-avatar-show .avatar i {
+    position: absolute;
+    left: -3px;
+    top: -3px;
+    bottom: -3px;
+    right: -3px;
+    border: 4px solid #ecab18;
+    border-right-color: #5fb878;
+    border-bottom-color: #5fb878;
+    border-radius: 50%;
+    -webkit-transition: all .5s;
+    transition: all .5s;
+}
+
+.hui-userinfo-avatar-show .avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.hui-userinfo-avatar-show .avatar:hover .cover {
+    opacity: 1;
+}
+
+.hui-userinfo-avatar-show .avatar .cover {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 90px;
+    color: #eee;
+    opacity: 0;
+    transition: all .5s;
+    font-size: 13px;
+}
+
+.hui-userinfo-avatar-show .avatar:hover i {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+@media screen and (max-width: 590px) and (min-width: 100px) {
+
+    .main-container {
+        margin: 5px;
+    }
+
+    .layui-form-item .layui-input-block {
+        display: block
+    }
+
+    .layui-form-item .layui-input-block button {
+        position: inherit;
+        top: 10px;
+    }
+
+    .layui-form-item .layui-input-block .layui-btn {
+        position: inherit;
+        top: 10px;
+    }
+
+    .main-container .layui-form-item .layui-form-label {
+        float: none;
+        width: 100%;
+        text-align: left;
+        background-color: transparent;
+        border: 0;
+        padding-left: 1rem;
+    }
+
+    .main-container .layui-form-item .layui-input-block {
+        margin-left: 0 !important;
+    }
+
+    .layui-form .layui-form-item .required:after {
+        position: absolute;
+        left: 0 !important;
+    }
+
+    .layui-form .layui-form-item > tip {
+        margin-left: 0 !important;
+    }
+}
